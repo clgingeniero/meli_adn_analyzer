@@ -1,8 +1,11 @@
 package com.meli.adn.analizer.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.meli.adn.analizer.adapter.dto.AdnDTO;
+import com.meli.adn.analizer.adapter.interfaces.IAdapter;
 import com.meli.adn.analizer.commons.Request;
 import com.meli.adn.analizer.commons.Response;
+import com.meli.adn.analizer.commons.Status;
 import com.meli.adn.analizer.controller.dto.MutantResponseDTO;
 import com.meli.adn.analizer.controller.dto.StatsResponseDTO;
 import com.meli.adn.analizer.engine.command.ICommandBus;
@@ -12,8 +15,11 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -22,6 +28,8 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+
+import java.io.Serializable;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
@@ -45,6 +53,14 @@ class AdnControllerTest {
 
     @Mock
     private ICommandBus commandBus;
+
+    @MockBean
+    @Qualifier("StatsAdapter")
+    private IAdapter<Response<StatsResponseDTO>, Request<Serializable>> statsAdapter;
+
+    @MockBean
+    @Qualifier("MutantAdapter")
+    private IAdapter<Response<MutantResponseDTO>, Request<AdnDTO>> mutantAdapter;
 
     private MockMvc mockMvc;
 
@@ -83,6 +99,9 @@ class AdnControllerTest {
         headers.set(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON_VALUE);
         headers.set(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE);
 
+        Mockito.when(mutantAdapter.callService(any())).thenReturn(Response.<MutantResponseDTO>builder().data(null)
+                .status(Status.builder().code("200").build()).build());
+
         String[] dna = {
                 "ATGCGA",
                 "CAGTGC",
@@ -112,8 +131,9 @@ class AdnControllerTest {
 
     @Test
     void getStats() throws Exception {
-        HttpHeaders headers = new HttpHeaders();
 
+        Mockito.when(statsAdapter.callService(any())).thenReturn(Response.<StatsResponseDTO>builder().data(null).status(null).build());
+        HttpHeaders headers = new HttpHeaders();
         headers.set(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON_VALUE);
         headers.set(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE);
 
