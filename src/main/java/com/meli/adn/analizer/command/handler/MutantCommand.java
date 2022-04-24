@@ -16,10 +16,11 @@ import java.util.Arrays;
 @Component
 public class MutantCommand implements ICommandHandler<MutantResponseDTO, MutantReqCommand> {
 
-	public static final String MUTANT_REGEX = "^([A-Z]*)([A]{4}|[C]{4}|[T]{4}|[G]{4})([A-Z]*)$";
 	@Autowired
     @Qualifier("MutantAdapter")
-    private IAdapter<Response<MutantResponseDTO>, Request<AdnDTO>> dynamoAdapter;
+    private IAdapter<Response<MutantResponseDTO>, Request<AdnDTO>> mutantAdapter;
+
+	public static final String MUTANT_REGEX = "^([A-Z]*)([A]{4}|[C]{4}|[T]{4}|[G]{4})([A-Z]*)$";
 
 	@Override
 	public Response<MutantResponseDTO> handle(MutantReqCommand command) {
@@ -39,7 +40,7 @@ public class MutantCommand implements ICommandHandler<MutantResponseDTO, MutantR
 			}
 		}
 
-		return dynamoAdapter.callService(Request.<AdnDTO>builder()
+		return mutantAdapter.callService(Request.<AdnDTO>builder()
 						.dna(AdnDTO.builder()
 						.adnEval(dna)
 						.isMutant(getTotalMutants(command, transpose, diagonal, reverseDiagonal) > 1)

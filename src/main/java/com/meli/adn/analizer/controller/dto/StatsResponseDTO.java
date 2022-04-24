@@ -5,7 +5,6 @@ import com.meli.adn.analizer.commons.Body;
 import lombok.*;
 
 @Builder
-@Setter
 @Getter
 public class StatsResponseDTO extends Body{
 

@@ -34,9 +34,10 @@ public class StatsAdapter extends AbstractAwsDynamo implements IAdapter<Response
                 .data(StatsResponseDTO.builder()
                         .countHuman(humans)
                         .countMutant(mutants)
-                        .ratio((humans >0) ? mutants/humans : mutants)
+                        .ratio((humans >0) ? (double) mutants/humans : mutants)
                         .build()
-                ).build();
+                )
+                .build();
     }
 
     private DynamoDBScanExpression getDynamoDBScanExpression(String value) {

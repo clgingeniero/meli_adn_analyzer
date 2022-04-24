@@ -17,11 +17,11 @@ public class StatsCommand implements ICommandHandler<StatsResponseDTO, StatsReqC
 
 	@Autowired
     @Qualifier("StatsAdapter")
-    private IAdapter<Response<StatsResponseDTO>, Request<Serializable>> dynamoAdapter;
+    private IAdapter<Response<StatsResponseDTO>, Request<Serializable>> statsAdapter;
 
 	@Override
 	public Response<StatsResponseDTO> handle(StatsReqCommand command) {
-		return dynamoAdapter.callService(null);
+		return statsAdapter.callService(null);
 	}
 }
 

@@ -25,7 +25,7 @@ public class AdnController {
 	   @PostMapping(value = "/mutant", produces = MediaType.APPLICATION_JSON_VALUE)
 		public ResponseEntity<Response<MutantResponseDTO>> mutantAnalyzer(@RequestBody Request<String[]> request) {
 		   Response<MutantResponseDTO> response = commandBus.handle(new MutantReqCommand(request));
-		   return new ResponseEntity<>(commandBus.handle(new MutantReqCommand(request)), HttpStatus.valueOf(Integer.parseInt(response.getStatus().getCode())));
+		   return new ResponseEntity<>(commandBus.handle(new MutantReqCommand(request)), HttpStatus.valueOf(response.getStatus().getCode()));
 		}
 
 		@GetMapping(value = "/stats", produces = MediaType.APPLICATION_JSON_VALUE)
