@@ -18,9 +18,14 @@ import java.io.Serializable;
 @Component("StatsAdapter")
 public class StatsAdapter extends AbstractAwsDynamo implements IAdapter<Response<StatsResponseDTO>, Request<Serializable>> {
 
-    public static final String MUTANT = "Mutant";
-    public static final String HUMAN_ID = "0";
-    public static final String MUTANT_ID = "1";
+    @Value("${meli.adn.mutant}")
+    private String mutant;
+
+    @Value("${meli.adn.human.id}")
+    public String humanId;
+
+    @Value("${meli.adn.mutant.id}")
+    public String mutantId;
 
     public StatsAdapter(@Value("${meli.adn.table}") String adnTable) {
 		super(adnTable);
@@ -28,21 +33,46 @@ public class StatsAdapter extends AbstractAwsDynamo implements IAdapter<Response
 
     @Override
     public Response<StatsResponseDTO> callService(Request<Serializable> request) {
-        int humans = count(Adn.class, getDynamoDBScanExpression(HUMAN_ID));
-        int mutants = count(Adn.class, getDynamoDBScanExpression(MUTANT_ID));
+        return getStats();
+    }
+
+    /**
+     * Obtiene los humanos (count), los mutantes(count) y calcula el radio
+     * @return Response<StatsResponseDTO>
+     */
+    private Response<StatsResponseDTO> getStats() {
+        int humans = count(Adn.class, getDynamoDBScanExpression(humanId));
+        int mutants = count(Adn.class, getDynamoDBScanExpression(mutantId));
+
         return Response.<StatsResponseDTO>builder()
                 .data(StatsResponseDTO.builder()
                         .countHuman(humans)
                         .countMutant(mutants)
-                        .ratio((humans >0) ? mutants/humans : mutants)
+                        .ratio(getRatio(humans, mutants))
                         .build()
-                ).build();
+                )
+                .build();
     }
 
+    /**
+     * Construye la expresión para obtener los mutantes y humanos por medio del id de tipo de cada uno
+     * @param value String
+     * @return DynamoDBScanExpression
+     */
     private DynamoDBScanExpression getDynamoDBScanExpression(String value) {
         DynamoDBScanExpression condition = new DynamoDBScanExpression();
-        condition.addFilterCondition(MUTANT, new Condition().withComparisonOperator(ComparisonOperator.EQ)
+        condition.addFilterCondition(mutant, new Condition().withComparisonOperator(ComparisonOperator.EQ)
                 .withAttributeValueList(new AttributeValue().withN(value)));
         return condition;
+    }
+
+    /**
+     * Realiza el calculo del radio entre 2 números
+     * @param humans int
+     * @param mutants int
+     * @return double
+     */
+    private double getRatio(int humans, int mutants) {
+        return (humans >0) ? mutants/(double)humans: mutants;
     }
 }

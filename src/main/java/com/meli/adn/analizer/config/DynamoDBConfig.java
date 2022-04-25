@@ -8,8 +8,10 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class DynamoDBConfig {
+
     @Value("${meli.aws.region}")
     private String awsRegion;
+
     @Bean
     public DynamoDBMapper dynamoDBMapper() {
         AmazonDynamoDB client = AmazonDynamoDBClientBuilder.standard()

@@ -3,6 +3,7 @@ package com.meli.adn.analizer.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.meli.adn.analizer.adapter.dto.AdnDTO;
 import com.meli.adn.analizer.adapter.interfaces.IAdapter;
+import com.meli.adn.analizer.commons.Body;
 import com.meli.adn.analizer.commons.Request;
 import com.meli.adn.analizer.commons.Response;
 import com.meli.adn.analizer.commons.Status;
@@ -26,8 +27,8 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
-import org.springframework.web.context.WebApplicationContext;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.web.context.WebApplicationContext;
 
 import java.io.Serializable;
 
@@ -64,33 +65,27 @@ class AdnControllerTest {
 
     private MockMvc mockMvc;
 
+    public static final String[] DNA_MUTANT = new String[]{
+            "ATGCGA",
+            "CAGTGC",
+            "TTATGT",
+            "AGAAGG",
+            "CCCCTA",
+            "TCACTG"
+    };
+
+    public static final String[] DNA_HUMAN = new String[]{
+            "TTGCGA",
+            "CAGTGC",
+            "TTATGT",
+            "AGAAGG",
+            "ACCCTA",
+            "TCACTG"
+    };
+
     @BeforeEach
     public void setUp() {
         mockMvc = MockMvcBuilders.webAppContextSetup(context).build();
-    }
-
-    @Test
-    void mutantAnalyzerHttp405() throws Exception {
-        HttpHeaders headers = new HttpHeaders();
-        headers.set(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON_VALUE);
-        headers.set(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE);
-
-        var response = Response.builder().data(
-                StatsResponseDTO.builder()
-                        .ratio(0.4)
-                        .countHuman(100)
-                        .countMutant(40)
-                        .build()
-        ).build();
-        when(commandBus.handle(any())).thenReturn(response);
-        MvcResult mvcResult = mockMvc
-                .perform(get("/mutant/")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .headers(headers)
-                )
-                .andExpect(status().isMethodNotAllowed())
-                .andReturn();
-        Assertions.assertEquals(HttpStatus.METHOD_NOT_ALLOWED.value(), mvcResult.getResponse().getStatus());
     }
 
     @Test
@@ -99,28 +94,15 @@ class AdnControllerTest {
         headers.set(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON_VALUE);
         headers.set(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE);
 
-        Mockito.when(mutantAdapter.callService(any())).thenReturn(Response.<MutantResponseDTO>builder().data(null)
-                .status(Status.builder().code("200").build()).build());
+        Mockito.when(mutantAdapter.callService(any())).thenReturn(Response.<MutantResponseDTO>builder()
+                .data((MutantResponseDTO)getMutantResponse().getData())
+                .status(Status.builder().code(HttpStatus.OK.value()).build()).build());
 
-        String[] dna = {
-                "ATGCGA",
-                "CAGTGC",
-                "TTATGT",
-                "AGAAGG",
-                "CCCCTA",
-                "TCACTG"
-        };
-
-        var response = Response.builder().data(
-                MutantResponseDTO.builder()
-                        .isMutant(true)
-                        .build()
-        ).build();
-        when(commandBus.handle(any())).thenReturn(response);
+        when(commandBus.handle(any())).thenReturn(getMutantResponse());
         MvcResult mvcResult = mockMvc
                 .perform(post("/mutant/")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(Request.<String[]>builder().dna(dna).build()))
+                        .content(objectMapper.writeValueAsString(Request.<String[]>builder().dna(DNA_MUTANT).build()))
                         .headers(headers)
                 )
                 .andExpect(status().isOk())
@@ -130,29 +112,77 @@ class AdnControllerTest {
     }
 
     @Test
-    void getStats() throws Exception {
+    void mutantAnalyzerHttp403() throws Exception {
+        HttpHeaders headers = new HttpHeaders();
+        headers.set(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON_VALUE);
+        headers.set(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE);
 
+        Mockito.when(mutantAdapter.callService(any())).thenReturn(Response.<MutantResponseDTO>builder()
+                .data((MutantResponseDTO) getHumanResponse().getData())
+                .status(Status.builder().code(HttpStatus.FORBIDDEN.value()).build()).build());
+
+        when(commandBus.handle(any())).thenReturn(getMutantResponse());
+        MvcResult mvcResult = mockMvc
+                .perform(post("/mutant/")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(Request.<String[]>builder().dna(DNA_HUMAN).build()))
+                        .headers(headers)
+                )
+                .andExpect(status().isForbidden())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andReturn();
+        Assertions.assertEquals(HttpStatus.FORBIDDEN.value(), mvcResult.getResponse().getStatus());
+    }
+
+    @Test
+    void getStats() throws Exception {
         Mockito.when(statsAdapter.callService(any())).thenReturn(Response.<StatsResponseDTO>builder().data(null).status(null).build());
         HttpHeaders headers = new HttpHeaders();
         headers.set(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON_VALUE);
         headers.set(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE);
 
-        var response = Response.builder().data(
-                StatsResponseDTO.builder()
-                        .ratio(0.4)
-                        .countHuman(100)
-                        .countMutant(40)
-                        .build()
-                ).build();
-        when(commandBus.handle(any())).thenReturn(response);
+        when(commandBus.handle(any())).thenReturn(getStatsResponse());
         MvcResult mvcResult = mockMvc
                 .perform(get("/stats/")
                         .contentType(MediaType.APPLICATION_JSON)
                         .headers(headers)
                 )
                 .andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andReturn();
         Assertions.assertEquals(HttpStatus.OK.value(), mvcResult.getResponse().getStatus());
+    }
+
+    private Response<Body> getStatsResponse() {
+        return Response.builder().data(
+                StatsResponseDTO.builder()
+                        .ratio(0.4)
+                        .countHuman(100)
+                        .countMutant(40)
+                        .build()
+        ).build();
+    }
+
+    private Response<Body> getMutantResponse() {
+        return Response.builder().data(
+                MutantResponseDTO.builder()
+                        .isMutant(true)
+                        .build()
+        ).status(Status.builder()
+                .code(HttpStatus.OK.value())
+                .description(HttpStatus.OK.getReasonPhrase())
+                .build())
+                .build();
+    }
+
+    private Response<Body> getHumanResponse() {
+        return Response.builder().data(
+                        MutantResponseDTO.builder()
+                                .isMutant(false)
+                                .build()
+                ).status(Status.builder()
+                        .code(HttpStatus.FORBIDDEN.value())
+                        .description(HttpStatus.FORBIDDEN.getReasonPhrase())
+                        .build())
+                .build();
     }
 }

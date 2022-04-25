@@ -5,12 +5,10 @@ import java.io.Serializable;
 import lombok.*;
 
 @Getter
-@Setter
 @Builder
-@NoArgsConstructor
 @AllArgsConstructor
 public class Status implements Serializable{
 
-    private String code;
+    private Integer code;
     private String description;
 }

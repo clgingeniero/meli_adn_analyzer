@@ -5,7 +5,7 @@ import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapperConfig;
 
 public class StageNameTableNameResolver extends DynamoDBMapperConfig.DefaultTableNameResolver {
 	
-	private String tableName;
+	private final String tableName;
 
 	@Autowired
 	public StageNameTableNameResolver(String tableName) {
