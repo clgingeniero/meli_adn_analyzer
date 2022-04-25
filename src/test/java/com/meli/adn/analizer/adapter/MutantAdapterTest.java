@@ -46,15 +46,14 @@ class MutantAdapterTest {
         mutantAdapter.dynamoDBMapper = dynamoDBMapper;
     }
 
-
     @Test
     void mutant() {
         Adn adn = new Adn();
         adn.setDna(Arrays.toString(DNA_MUTANT));
         adn.setMutant(true);
         Mockito.when(dynamoDBMapper.load(any())).thenReturn(adn);
-        var response = mutantAdapter.callService(Request.<AdnDTO>builder().dna(AdnDTO.builder().adnEval(DNA_MUTANT).build()).build());
-        Assertions.assertEquals(HttpStatus.INTERNAL_SERVER_ERROR.value(), response.getStatus().getCode());
+        var response = mutantAdapter.callService(Request.<AdnDTO>builder().dna(AdnDTO.builder().adnEval(DNA_MUTANT).isMutant(true).build()).build());
+        Assertions.assertEquals(HttpStatus.OK.value(), response.getStatus().getCode());
 
     }
 

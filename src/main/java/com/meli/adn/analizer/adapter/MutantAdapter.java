@@ -29,21 +29,21 @@ public class MutantAdapter extends AbstractAwsDynamo implements IAdapter<Respons
         adn.setMutant(request.getDna().getIsMutant());
         return Response.<MutantResponseDTO>builder()
                 .status(Objects.isNull(load(adn)) ? saveAdn(adn) : getStatus(adn))
-                .data(MutantResponseDTO.builder().isMutant(request.getDna().getIsMutant()).build()).build();
+                .data(MutantResponseDTO.builder().isMutant(request.getDna().getIsMutant()).build())
+                .build();
     }
 
     private Status saveAdn(Adn adn) {
         try {
             save(adn);
-            return getStatus(adn);
         } catch (Exception e) {
-           return Status.builder().code(HttpStatus.INTERNAL_SERVER_ERROR.value())
-                   .build();
+           return Status.builder().code(HttpStatus.INTERNAL_SERVER_ERROR.value()).build();
         }
+        return getStatus(adn);
     }
 
     private Status getStatus(Adn adn) {
-        return adn.getMutant() ?
+        return Boolean.TRUE.equals(adn.getMutant()) ?
                 Status.builder().code(HttpStatus.OK.value())
                         .description(HttpStatus.OK.getReasonPhrase()).build() :
                 Status.builder().code(HttpStatus.FORBIDDEN.value())

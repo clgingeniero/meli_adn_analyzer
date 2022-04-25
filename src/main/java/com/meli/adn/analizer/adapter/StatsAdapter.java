@@ -18,9 +18,14 @@ import java.io.Serializable;
 @Component("StatsAdapter")
 public class StatsAdapter extends AbstractAwsDynamo implements IAdapter<Response<StatsResponseDTO>, Request<Serializable>> {
 
-    public static final String MUTANT = "Mutant";
-    public static final String HUMAN_ID = "0";
-    public static final String MUTANT_ID = "1";
+    @Value("${meli.adn.mutant}")
+    private String mutant;
+
+    @Value("${meli.adn.human.id}")
+    public String humanId;
+
+    @Value("${meli.adn.mutant.id}")
+    public String mutantId;
 
     public StatsAdapter(@Value("${meli.adn.table}") String adnTable) {
 		super(adnTable);
@@ -28,8 +33,8 @@ public class StatsAdapter extends AbstractAwsDynamo implements IAdapter<Response
 
     @Override
     public Response<StatsResponseDTO> callService(Request<Serializable> request) {
-        int humans = count(Adn.class, getDynamoDBScanExpression(HUMAN_ID));
-        int mutants = count(Adn.class, getDynamoDBScanExpression(MUTANT_ID));
+        int humans = count(Adn.class, getDynamoDBScanExpression(humanId));
+        int mutants = count(Adn.class, getDynamoDBScanExpression(mutantId));
         return Response.<StatsResponseDTO>builder()
                 .data(StatsResponseDTO.builder()
                         .countHuman(humans)
@@ -42,7 +47,7 @@ public class StatsAdapter extends AbstractAwsDynamo implements IAdapter<Response
 
     private DynamoDBScanExpression getDynamoDBScanExpression(String value) {
         DynamoDBScanExpression condition = new DynamoDBScanExpression();
-        condition.addFilterCondition(MUTANT, new Condition().withComparisonOperator(ComparisonOperator.EQ)
+        condition.addFilterCondition(mutant, new Condition().withComparisonOperator(ComparisonOperator.EQ)
                 .withAttributeValueList(new AttributeValue().withN(value)));
         return condition;
     }
