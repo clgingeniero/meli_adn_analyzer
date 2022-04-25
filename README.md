@@ -1,5 +1,4 @@
-# meli_adn_analyzer
-Challenge Mercadolibre
+# meli_adn_analyzer Challenge Mercadolibre
 
 ![image](https://user-images.githubusercontent.com/1218391/165114364-daa70bac-0588-4dfe-a30a-5d6aa2df4ab9.png)
 
@@ -64,7 +63,7 @@ String[] dna = {"ATGCGA","CAGTGC","TTATGT","AGAAGG","CCCCTA","TCACTG"}; En este 
 # Mutants 
 ## Verifica si un humano es mutante
 ### Tipo: POST
-#### http://localhost:5000/mutants
+#### http://localhost:8080/mutants
 #### http://meliadnanalyzer-env.eba-ipuvfg9c.us-east-1.elasticbeanstalk.com/mutants/
 
 #### Body Mutante
@@ -148,7 +147,7 @@ String[] dna = {"ATGCGA","CAGTGC","TTATGT","AGAAGG","CCCCTA","TCACTG"}; En este 
 # Stats
 ## Retorna las estadísticas de los humanos verificados, dando cantidades y el ratio de mutantes encontrados
 ### Tipo: GET
-#### http://localhost:5000/stats/
+#### http://localhost:8080/stats/
 #### http://meliadnanalyzer-env.eba-ipuvfg9c.us-east-1.elasticbeanstalk.com/stats/
 
 #### Response
