@@ -10,6 +10,7 @@ import com.meli.adn.analizer.controller.dto.MutantResponseDTO;
 import com.meli.adn.analizer.engine.command.ICommandHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 
@@ -23,8 +24,11 @@ public class MutantCommand implements ICommandHandler<MutantResponseDTO, MutantR
     @Qualifier("MutantAdapter")
     private IAdapter<Response<MutantResponseDTO>, Request<AdnDTO>> mutantAdapter;
 
-	public static final String MUTANT_REGEX = "^([A-Z]*)([A]{4}|[C]{4}|[T]{4}|[G]{4})([A-Z]*)$";
-	public static final String STRUCTURE_REGEX = "^[ACTG]+$";
+	@Value("${meli.mutant.regexp}")
+	private String mutantRegex;
+
+	@Value("${meli.dna.regexp}")
+	private String structureRegex;
 
 	@Override
 	public Response<MutantResponseDTO> handle(MutantReqCommand command) {
@@ -43,26 +47,16 @@ public class MutantCommand implements ICommandHandler<MutantResponseDTO, MutantR
 
 	public boolean validateDna(String[] dna) {
 		long validate = Arrays.stream(dna)
-				.map(b -> b.matches(STRUCTURE_REGEX))
+				.map(b -> b.matches(structureRegex))
 				.filter(s -> s.equals(false))
 				.count();
 		return validate == 0;
 	}
 
 	private long getTotalNitrogenous(String[] dna) {
-		String[] transpose = new String[dna.length];
-		String diagonal = "";
-		String diagonalInverse = "";
-
-		for (int i = 0; i < dna.length; i++) {
-			diagonal = diagonal.concat(String.valueOf(dna[i].charAt(i)));
-			diagonalInverse = diagonalInverse.concat(String.valueOf(dna[i].charAt(5-i)));
-			for (String s : dna) {
-				transpose[i] = (transpose[i] == null)
-						? String.valueOf(s.charAt(i))
-						: transpose[i].concat(String.valueOf(s.charAt(i)));
-			}
-		}
+		String[] transpose = getTransposeDna(dna);
+		String diagonal = getDiagonal(dna);
+		String diagonalInverse = getDiagonalInverse(dna);
 
 		return isMutant(dna)
 				+ isMutant(transpose)
@@ -77,8 +71,38 @@ public class MutantCommand implements ICommandHandler<MutantResponseDTO, MutantR
 				.count();
 	}
 
+	private String[] getTransposeDna(String[] dna){
+
+		String[] transpose = new String[dna.length];
+		for (int i = 0; i < dna.length; i++) {
+			for (String s : dna) {
+				transpose[i] = (transpose[i] == null)
+						? String.valueOf(s.charAt(i))
+						: transpose[i].concat(String.valueOf(s.charAt(i)));
+			}
+		}
+		return transpose;
+	}
+
+
+	private String getDiagonal(String[] dna){
+		String diagonal = "";
+		for (int i = 0; i < dna.length; i++) {
+			diagonal = diagonal.concat(String.valueOf(dna[i].charAt(i)));
+		}
+		return diagonal;
+	}
+
+	private String getDiagonalInverse(String[] dna){
+		String diagonalInverse = "";
+		for (int i = 0; i < dna.length; i++) {
+			diagonalInverse = diagonalInverse.concat(String.valueOf(dna[i].charAt(5-i)));
+		}
+		return diagonalInverse;
+	}
+
 	private boolean isMatches(String str) {
-		return str.matches(MUTANT_REGEX);
+		return str.matches(mutantRegex);
 	}
 
 	private Response<MutantResponseDTO> badRequest() {

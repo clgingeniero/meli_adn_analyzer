@@ -148,7 +148,6 @@ class AdnControllerTest {
                         .headers(headers)
                 )
                 .andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andReturn();
         Assertions.assertEquals(HttpStatus.OK.value(), mvcResult.getResponse().getStatus());
     }

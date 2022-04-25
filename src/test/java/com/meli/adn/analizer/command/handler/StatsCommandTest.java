@@ -36,7 +36,7 @@ class StatsCommandTest {
     @Test
     void handle_mutant_status() {
         Mockito.when(statsAdapter.callService(any())).thenReturn(getResponseStats());
-        Response<StatsResponseDTO> response= statsCommand.handle(new StatsReqCommand(null));
+        Response<StatsResponseDTO> response= statsCommand.handle(new StatsReqCommand());
         Assertions.assertEquals(HttpStatus.OK.value(), response.getStatus().getCode());
     }
 

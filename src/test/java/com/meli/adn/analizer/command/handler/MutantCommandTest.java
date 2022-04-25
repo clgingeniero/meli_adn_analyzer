@@ -1,6 +1,5 @@
 package com.meli.adn.analizer.command.handler;
 
-
 import com.meli.adn.analizer.adapter.dto.AdnDTO;
 import com.meli.adn.analizer.adapter.interfaces.IAdapter;
 import com.meli.adn.analizer.command.MutantReqCommand;
@@ -43,6 +42,15 @@ class MutantCommandTest {
             "TCACTG"
     };
 
+    public static final String[] DNA_CORRUPT = new String[]{
+            "UTGCGA",
+            "CAGTGC",
+            "TTATGT",
+            "AGAAGG",
+            "ACCCTA",
+            "TCACTG"
+    };
+
     @Autowired
     private ICommandHandler<MutantResponseDTO, MutantReqCommand> mutantCommand;
 
@@ -51,11 +59,7 @@ class MutantCommandTest {
     private IAdapter<Response<MutantResponseDTO>, Request<AdnDTO>> mutantAdapter;
 
     private Request<String[]> request;
-
-    @BeforeEach
-    public void setUp() {
-    }
-
+    
     @Test
     void handle_mutant_status() {
         request = Request.<String[]>builder().dna(DNA_MUTANT).build();
@@ -84,6 +88,16 @@ class MutantCommandTest {
                 .status(Status.builder().code(HttpStatus.FORBIDDEN.value()).build()).build());
         Response<MutantResponseDTO> response= mutantCommand.handle(new MutantReqCommand(request));
         Assertions.assertEquals(HttpStatus.FORBIDDEN.value(), response.getStatus().getCode());
+    }
+
+    @Test
+    void handle_dna_bad() {
+        request = Request.<String[]>builder().dna(DNA_CORRUPT).build();
+        Mockito.when(mutantAdapter.callService(any())).thenReturn(Response.<MutantResponseDTO>builder()
+                .data(MutantResponseDTO.builder().isMutant(false).build())
+                .status(Status.builder().code(HttpStatus.BAD_REQUEST.value()).build()).build());
+        Response<MutantResponseDTO> response= mutantCommand.handle(new MutantReqCommand(request));
+        Assertions.assertEquals(HttpStatus.BAD_REQUEST.value(), response.getStatus().getCode());
     }
 
     @Test

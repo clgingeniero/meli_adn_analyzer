@@ -27,12 +27,13 @@ public class AdnController {
 		public ResponseEntity<Response<MutantResponseDTO>> mutantAnalyzer(
 				@RequestBody @NonNull Request<String[]> request) {
 		   Response<MutantResponseDTO> response = commandBus.handle(new MutantReqCommand(request));
-		   return new ResponseEntity<>(commandBus.handle(new MutantReqCommand(request)), HttpStatus.valueOf(response.getStatus().getCode()));
+		   return new ResponseEntity<>(response, HttpStatus.valueOf(response.getStatus().getCode()));
 		}
 
 		@GetMapping(value = "/stats", produces = MediaType.APPLICATION_JSON_VALUE)
-		public ResponseEntity<Response<StatsResponseDTO>> getStats() {
-			return new ResponseEntity<>(commandBus.handle(new StatsReqCommand()), HttpStatus.OK);
+		public ResponseEntity<StatsResponseDTO> getStats() {
+		   Response<StatsResponseDTO> response = commandBus.handle(new StatsReqCommand());
+		   return new ResponseEntity<>(response.getData(), HttpStatus.OK);
 		}
 }
 

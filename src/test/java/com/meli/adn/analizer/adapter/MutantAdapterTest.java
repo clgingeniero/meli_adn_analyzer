@@ -33,6 +33,15 @@ class MutantAdapterTest {
             "TCACTG"
     };
 
+    public static final String[] DNA_HUMAN = new String[]{
+            "TTGCGA",
+            "CAGTGC",
+            "TTATGT",
+            "AGAAGG",
+            "ACCCTA",
+            "TCACTG"
+    };
+
     private MutantAdapter mutantAdapter;
 
     @Mock
@@ -54,7 +63,16 @@ class MutantAdapterTest {
         Mockito.when(dynamoDBMapper.load(any())).thenReturn(adn);
         var response = mutantAdapter.callService(Request.<AdnDTO>builder().dna(AdnDTO.builder().adnEval(DNA_MUTANT).isMutant(true).build()).build());
         Assertions.assertEquals(HttpStatus.OK.value(), response.getStatus().getCode());
+    }
 
+    @Test
+    void human() {
+        Adn adn = new Adn();
+        adn.setDna(Arrays.toString(DNA_HUMAN));
+        adn.setMutant(false);
+        Mockito.when(dynamoDBMapper.load(any())).thenReturn(adn);
+        var response = mutantAdapter.callService(Request.<AdnDTO>builder().dna(AdnDTO.builder().adnEval(DNA_HUMAN).isMutant(false).build()).build());
+        Assertions.assertEquals(HttpStatus.FORBIDDEN.value(), response.getStatus().getCode());
     }
 
 }
