@@ -38,13 +38,13 @@ String[] dna = {"ATGCGA","CAGTGC","TTATGT","AGAAGG","CCCCTA","TCACTG"}; En este 
 - Se utiliza Elastic Beanstalk para el despliegue de la aplicación en el servidor de amazon con capacidad de replicación elastica dependiendo de la carga impuesta, adicional válida la salud del servicio por el método health expuesto por actuator genrando alarma en caso de tener status diferentes al 2xx
 
 ## __Configuración del ambiente local__
+- Instalar aws cli y autenticarse
 - En una cuenta de Amazon aws Crear una Tabla de DynamoDB llamada Adn y con un campo (Partition key) de tipo String llamado Dna
+- Usar la región us-east-1 o cambiarla en el archivo de propiedades
 - Si prefiere crear mediante el cli de aws puede ejecutar el siguiente comando
 ```
 > aws dynamodb create-table --table-name Adn --attribute-definitions AttributeName=Dna,AttributeType=S --key-schema AttributeName=Dna=HASH --provisioned-throughput ReadCapacityUnits=5,WriteCapacityUnits=5 --table-class STANDARD
 ```
-- Usar la región us-east-1 o cambiarla en el archivo de propiedades
-- Instalar aws cli y autenticarse
 - clonar el repositorio 
 
 ## __Ejecución de la aplicación__
