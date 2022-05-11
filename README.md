@@ -63,8 +63,8 @@ String[] dna = {"ATGCGA","CAGTGC","TTATGT","AGAAGG","CCCCTA","TCACTG"}; En este 
 # Mutants 
 ## Verifica si un humano es mutante
 ### Tipo: POST
-#### http://localhost:8080/mutants
-#### http://meliadnanalyzer-env.eba-shcg2bpe.us-east-1.elasticbeanstalk.com/mutants/
+#### http://localhost:8080/mutant
+#### http://meliadnanalyzer-env.eba-shcg2bpe.us-east-1.elasticbeanstalk.com/mutant/
 
 #### Body Mutante
 ```
