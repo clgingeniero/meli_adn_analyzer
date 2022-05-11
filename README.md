@@ -42,7 +42,7 @@ String[] dna = {"ATGCGA","CAGTGC","TTATGT","AGAAGG","CCCCTA","TCACTG"}; En este 
 - Usar la región us-east-1 o cambiarla en el archivo de propiedades
 - Si prefiere crear mediante el cli de aws puede ejecutar el siguiente comando
 ```
-> aws dynamodb create-table --table-name Adn --attribute-definitions AttributeName=Dna,AttributeType=S --key-schema AttributeName=Dna=HASH --provisioned-throughput ReadCapacityUnits=5,WriteCapacityUnits=5 --table-class STANDARD
+> aws dynamodb create-table --table-name Adn --attribute-definitions AttributeName=Dna,AttributeType=S --key-schema AttributeName=Dna,KeyType=HASH --provisioned-throughput ReadCapacityUnits=5,WriteCapacityUnits=5 --table-class STANDARD
 ```
 - clonar el repositorio 
 
@@ -56,7 +56,7 @@ String[] dna = {"ATGCGA","CAGTGC","TTATGT","AGAAGG","CCCCTA","TCACTG"}; En este 
 ## __Posibles errores__
 
 - En caso de presentar error 5XX en la primera ejecución en ambiente local, valide que cuente con las credenciales correctas de aws y la taba creada de DynamoDB
-
+- En la instalación en elasticbeanstalk el puerto debe estar configurado en 5000 y se deben agregar AWS_ACCESS_KEY_ID y AWS_SECRET_KEY en los Environment properties
 ---
 
 ## __API URLs__
@@ -64,7 +64,7 @@ String[] dna = {"ATGCGA","CAGTGC","TTATGT","AGAAGG","CCCCTA","TCACTG"}; En este 
 ## Verifica si un humano es mutante
 ### Tipo: POST
 #### http://localhost:8080/mutants
-#### http://meliadnanalyzer-env.eba-ipuvfg9c.us-east-1.elasticbeanstalk.com/mutants/
+#### http://meliadnanalyzer-env.eba-shcg2bpe.us-east-1.elasticbeanstalk.com/mutants/
 
 #### Body Mutante
 ```
