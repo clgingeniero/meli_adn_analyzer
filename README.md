@@ -148,7 +148,7 @@ String[] dna = {"ATGCGA","CAGTGC","TTATGT","AGAAGG","CCCCTA","TCACTG"}; En este 
 ## Retorna las estadísticas de los humanos verificados, dando cantidades y el ratio de mutantes encontrados
 ### Tipo: GET
 #### http://localhost:8080/stats/
-#### http://meliadnanalyzer-env.eba-ipuvfg9c.us-east-1.elasticbeanstalk.com/stats/
+#### http://meliadnanalyzer-env.eba-shcg2bpe.us-east-1.elasticbeanstalk.com/stats/
 
 #### Response
 ``` 
