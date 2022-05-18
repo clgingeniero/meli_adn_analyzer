@@ -2,7 +2,8 @@ package com.meli.adn.analizer.controller.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.meli.adn.analizer.commons.Body;
-import lombok.*;
+import lombok.Builder;
+import lombok.Getter;
 
 @Builder
 @Getter

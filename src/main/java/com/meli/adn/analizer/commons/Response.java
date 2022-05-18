@@ -1,7 +1,9 @@
 package com.meli.adn.analizer.commons;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
 
 import java.io.Serializable;
 
