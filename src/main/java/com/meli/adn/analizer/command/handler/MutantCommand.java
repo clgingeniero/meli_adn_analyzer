@@ -96,7 +96,7 @@ public class MutantCommand implements ICommandHandler<MutantResponseDTO, MutantR
 	private String getDiagonalInverse(String[] dna){
 		String diagonalInverse = "";
 		for (int i = 0; i < dna.length; i++) {
-			diagonalInverse = diagonalInverse.concat(String.valueOf(dna[i].charAt(5-i)));
+			diagonalInverse = diagonalInverse.concat(String.valueOf(dna[i].charAt((dna.length-1)-i)));
 		}
 		return diagonalInverse;
 	}
