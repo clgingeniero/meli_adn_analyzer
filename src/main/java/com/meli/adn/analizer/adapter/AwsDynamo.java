@@ -1,4 +1,4 @@
-package com.meli.adn.analizer.adapter.interfaces;
+package com.meli.adn.analizer.adapter;
 
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapper;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapperConfig;
