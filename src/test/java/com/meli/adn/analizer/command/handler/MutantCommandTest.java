@@ -10,7 +10,6 @@ import com.meli.adn.analizer.controller.dto.MutantResponseDTO;
 import com.meli.adn.analizer.engine.command.ICommandHandler;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -59,7 +58,7 @@ class MutantCommandTest {
     private IAdapter<Response<MutantResponseDTO>, Request<AdnDTO>> mutantAdapter;
 
     private Request<String[]> request;
-    
+
     @Test
     void handle_mutant_status() {
         request = Request.<String[]>builder().dna(DNA_MUTANT).build();

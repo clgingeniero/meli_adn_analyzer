@@ -1,12 +1,10 @@
 package com.meli.adn.analizer.command.handler;
 
 import com.meli.adn.analizer.adapter.interfaces.IAdapter;
-import com.meli.adn.analizer.command.MutantReqCommand;
 import com.meli.adn.analizer.command.StatsReqCommand;
 import com.meli.adn.analizer.commons.Request;
 import com.meli.adn.analizer.commons.Response;
 import com.meli.adn.analizer.commons.Status;
-import com.meli.adn.analizer.controller.dto.MutantResponseDTO;
 import com.meli.adn.analizer.controller.dto.StatsResponseDTO;
 import com.meli.adn.analizer.engine.command.ICommandHandler;
 import org.junit.jupiter.api.Assertions;

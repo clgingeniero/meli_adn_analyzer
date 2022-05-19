@@ -6,12 +6,13 @@ import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBScanExpression;
 import com.meli.adn.analizer.config.StageNameTableNameResolver;
 import org.springframework.beans.factory.annotation.Autowired;
 
-public abstract class AbstractAwsDynamo {
+public class AwsDynamo {
+
     @Autowired
     public DynamoDBMapper dynamoDBMapper;
     private final String table;
 
-	protected AbstractAwsDynamo(String tableName) {
+	protected AwsDynamo(String tableName) {
         this.table = tableName;
 	}
 

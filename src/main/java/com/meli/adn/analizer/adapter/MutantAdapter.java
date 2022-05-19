@@ -1,7 +1,7 @@
 package com.meli.adn.analizer.adapter;
 
 import com.meli.adn.analizer.adapter.dto.AdnDTO;
-import com.meli.adn.analizer.adapter.interfaces.AbstractAwsDynamo;
+import com.meli.adn.analizer.adapter.interfaces.AwsDynamo;
 import com.meli.adn.analizer.adapter.interfaces.IAdapter;
 import com.meli.adn.analizer.adapter.model.Adn;
 import com.meli.adn.analizer.commons.Request;
@@ -16,7 +16,7 @@ import java.util.Arrays;
 import java.util.Objects;
 
 @Component("MutantAdapter")
-public class MutantAdapter extends AbstractAwsDynamo implements IAdapter<Response<MutantResponseDTO>, Request<AdnDTO>> {
+public class MutantAdapter extends AwsDynamo implements IAdapter<Response<MutantResponseDTO>, Request<AdnDTO>> {
 
 	public MutantAdapter(@Value("${meli.adn.table}") String adnTable) {
 		super(adnTable);
