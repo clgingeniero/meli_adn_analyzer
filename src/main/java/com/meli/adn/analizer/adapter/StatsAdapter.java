@@ -4,7 +4,6 @@ import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBScanExpression;
 import com.amazonaws.services.dynamodbv2.model.AttributeValue;
 import com.amazonaws.services.dynamodbv2.model.ComparisonOperator;
 import com.amazonaws.services.dynamodbv2.model.Condition;
-import com.meli.adn.analizer.adapter.interfaces.AwsDynamo;
 import com.meli.adn.analizer.adapter.interfaces.IAdapter;
 import com.meli.adn.analizer.adapter.model.Adn;
 import com.meli.adn.analizer.commons.Request;

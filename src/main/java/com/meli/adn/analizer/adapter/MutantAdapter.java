@@ -1,7 +1,6 @@
 package com.meli.adn.analizer.adapter;
 
 import com.meli.adn.analizer.adapter.dto.AdnDTO;
-import com.meli.adn.analizer.adapter.interfaces.AwsDynamo;
 import com.meli.adn.analizer.adapter.interfaces.IAdapter;
 import com.meli.adn.analizer.adapter.model.Adn;
 import com.meli.adn.analizer.commons.Request;
