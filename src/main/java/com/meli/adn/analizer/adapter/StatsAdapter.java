@@ -4,7 +4,7 @@ import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBScanExpression;
 import com.amazonaws.services.dynamodbv2.model.AttributeValue;
 import com.amazonaws.services.dynamodbv2.model.ComparisonOperator;
 import com.amazonaws.services.dynamodbv2.model.Condition;
-import com.meli.adn.analizer.adapter.interfaces.AbstractAwsDynamo;
+import com.meli.adn.analizer.adapter.interfaces.AwsDynamo;
 import com.meli.adn.analizer.adapter.interfaces.IAdapter;
 import com.meli.adn.analizer.adapter.model.Adn;
 import com.meli.adn.analizer.commons.Request;
@@ -16,7 +16,7 @@ import org.springframework.stereotype.Component;
 import java.io.Serializable;
 
 @Component("StatsAdapter")
-public class StatsAdapter extends AbstractAwsDynamo implements IAdapter<Response<StatsResponseDTO>, Request<Serializable>> {
+public class StatsAdapter extends AwsDynamo implements IAdapter<Response<StatsResponseDTO>, Request<Serializable>> {
 
     @Value("${meli.adn.mutant}")
     private String mutant;
