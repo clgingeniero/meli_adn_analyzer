@@ -15,7 +15,7 @@ import java.util.Arrays;
 import java.util.Objects;
 
 @Component("MutantAdapter")
-public class MutantAdapter extends AwsDynamo implements IAdapter<Response<MutantResponseDTO>, Request<AdnDTO>> {
+public class MutantAdapter extends AbstractAwsDynamo implements IAdapter<Response<MutantResponseDTO>, Request<AdnDTO>> {
 
 	public MutantAdapter(@Value("${meli.adn.table}") String adnTable) {
 		super(adnTable);

@@ -15,7 +15,7 @@ import org.springframework.stereotype.Component;
 import java.io.Serializable;
 
 @Component("StatsAdapter")
-public class StatsAdapter extends AwsDynamo implements IAdapter<Response<StatsResponseDTO>, Request<Serializable>> {
+public class StatsAdapter extends AbstractAwsDynamo implements IAdapter<Response<StatsResponseDTO>, Request<Serializable>> {
 
     @Value("${meli.adn.mutant}")
     private String mutant;
