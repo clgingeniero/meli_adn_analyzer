@@ -7,7 +7,7 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public class MutantReqCommand extends Command<Request<String[]>>{
+public class MutantReqCommand implements Command<Request<String[]>>{
 
     private Request<String[]> request;
 }

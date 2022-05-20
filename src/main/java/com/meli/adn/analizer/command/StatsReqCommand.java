@@ -8,4 +8,4 @@ import java.io.Serializable;
 
 @Getter
 @AllArgsConstructor
-public class StatsReqCommand extends Command<Request<Serializable>>{}
+public class StatsReqCommand implements Command<Request<Serializable>>{}
