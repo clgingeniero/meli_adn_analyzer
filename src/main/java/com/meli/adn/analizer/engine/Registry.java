@@ -8,14 +8,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.GenericTypeResolver;
 import java.util.HashMap;
-import java.util.Map;
 import java.util.Objects;
 
 public class Registry {
 
     private static final Logger LOG = LoggerFactory.getLogger(Registry.class);
 
-    private Map<Class<? extends Command>, CommandProvider> providerMap = new HashMap<>();
+    private HashMap<Class<? extends Command>, CommandProvider> providerMap = new HashMap<>();
 
     private ApplicationContext applicationContext;
 
